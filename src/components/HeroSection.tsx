@@ -1,0 +1,91 @@
+import { motion } from "framer-motion";
+import { MapPin, Shield, Clock, IndianRupee, Brain, TrendingUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import heroImg from "@/assets/bangalore-hero.jpg";
+
+const HeroSection = () => {
+  return (
+    <section className="relative min-h-[90vh] flex items-center overflow-hidden">
+      {/* Background image with overlay */}
+      <div className="absolute inset-0">
+        <img src={heroImg} alt="Bangalore cityscape at golden hour" className="w-full h-full object-cover" />
+        <div className="absolute inset-0 hero-gradient opacity-85" />
+      </div>
+
+      <div className="container relative z-10 py-20">
+        <div className="max-w-3xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="flex items-center gap-2 mb-6"
+          >
+            <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-primary/20 text-primary text-sm font-medium border border-primary/30">
+              <Brain className="w-4 h-4" />
+              AI-Powered Rental Intelligence
+            </span>
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-[1.1] tracking-tight text-primary-foreground mb-6"
+          >
+            Find Your Perfect
+            <span className="text-gradient-primary block">Home in Bangalore</span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="text-lg md:text-xl text-primary-foreground/70 max-w-xl mb-8 leading-relaxed"
+          >
+            The AI matchmaker for working professionals earning ₹30K–₹50K. 
+            We rank homes by budget fit, commute, safety & your real needs — not random listings.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="flex flex-col sm:flex-row gap-4"
+          >
+            <Button size="lg" className="text-lg px-8 py-6 rounded-xl font-semibold animate-pulse-glow">
+              Find My Home
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              className="text-lg px-8 py-6 rounded-xl font-semibold border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 bg-transparent"
+            >
+              See How It Works
+            </Button>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="flex flex-wrap gap-6 mt-12"
+          >
+            {[
+              { icon: IndianRupee, label: "₹5K – ₹25K Rent" },
+              { icon: MapPin, label: "Bangalore Focus" },
+              { icon: Shield, label: "Safety Scored" },
+              { icon: Clock, label: "Commute-Aware" },
+            ].map((item) => (
+              <div key={item.label} className="flex items-center gap-2 text-primary-foreground/60 text-sm">
+                <item.icon className="w-4 h-4 text-primary" />
+                <span>{item.label}</span>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default HeroSection;
