@@ -4,6 +4,7 @@ import FeaturesSection from "@/components/FeaturesSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import CityFitSection from "@/components/CityFitSection";
 import AffordabilitySection from "@/components/AffordabilitySection";
+import PropertyListingsSection from "@/components/PropertyListingsSection";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 
@@ -13,6 +14,7 @@ const Index = () => {
       <Navbar />
       <HeroSection />
       <FeaturesSection />
+      <PropertyListingsSection />
       <HowItWorksSection />
       <AffordabilitySection />
       <CityFitSection />
