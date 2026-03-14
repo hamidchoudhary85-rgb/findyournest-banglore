@@ -1,7 +1,8 @@
-import { motion } from "framer-motion";
-import { MapPin, Clock, Train, Shield, Home, IndianRupee, User, BadgeCheck } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { MapPin, Clock, Train, Shield, Home, IndianRupee, User, BadgeCheck, GitCompareArrows, X, Check } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 interface Property {
