@@ -5,15 +5,15 @@ import heroImg from "@/assets/bangalore-hero.jpg";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-[90vh] flex items-center overflow-hidden">
+    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
       {/* Background image with overlay */}
       <div className="absolute inset-0">
         <img src={heroImg} alt="Bangalore cityscape at golden hour" className="w-full h-full object-cover" />
         <div className="absolute inset-0 hero-gradient opacity-85" />
       </div>
 
-      <div className="container relative z-10 py-20 flex flex-col items-center text-center">
-        <div className="max-w-3xl">
+      <div className="w-full relative z-10 py-20 px-4 flex flex-col items-center text-center">
+        <div className="w-full max-w-4xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
