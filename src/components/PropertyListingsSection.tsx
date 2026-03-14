@@ -54,14 +54,14 @@ const safetyColor = (safety: string) => {
   return "text-yellow-400";
 };
 
-const PropertyCard = ({ property, index }: { property: Property; index: number }) => (
+const PropertyCard = ({ property, index, isSelected, onToggleCompare }: { property: Property; index: number; isSelected: boolean; onToggleCompare: () => void }) => (
   <motion.div
     initial={{ opacity: 0, y: 30 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
     transition={{ duration: 0.4, delay: index * 0.05 }}
   >
-    <Card className="h-full bg-card border-border hover:border-primary/40 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 group">
+    <Card className={`h-full bg-card border-border hover:border-primary/40 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 group relative ${isSelected ? "ring-2 ring-primary border-primary" : ""}`}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between mb-2">
           <Badge
@@ -131,6 +131,19 @@ const PropertyCard = ({ property, index }: { property: Property; index: number }
             {property.verified && <BadgeCheck className="w-3.5 h-3.5 text-primary" />}
           </div>
         </div>
+
+        {/* Compare Button */}
+        <button
+          onClick={onToggleCompare}
+          className={`w-full mt-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-semibold transition-all ${
+            isSelected
+              ? "bg-primary text-primary-foreground"
+              : "bg-muted text-muted-foreground hover:bg-primary/10 hover:text-primary border border-border"
+          }`}
+        >
+          {isSelected ? <Check className="w-3.5 h-3.5" /> : <GitCompareArrows className="w-3.5 h-3.5" />}
+          {isSelected ? "Added to Compare" : "Compare"}
+        </button>
       </CardContent>
     </Card>
   </motion.div>
