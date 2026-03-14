@@ -1,7 +1,8 @@
-import { motion } from "framer-motion";
-import { MapPin, Clock, Train, Shield, Home, IndianRupee, User, BadgeCheck } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { MapPin, Clock, Train, Shield, Home, IndianRupee, User, BadgeCheck, GitCompareArrows, X, Check } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 interface Property {
@@ -53,14 +54,14 @@ const safetyColor = (safety: string) => {
   return "text-yellow-400";
 };
 
-const PropertyCard = ({ property, index }: { property: Property; index: number }) => (
+const PropertyCard = ({ property, index, isSelected, onToggleCompare }: { property: Property; index: number; isSelected: boolean; onToggleCompare: () => void }) => (
   <motion.div
     initial={{ opacity: 0, y: 30 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
     transition={{ duration: 0.4, delay: index * 0.05 }}
   >
-    <Card className="h-full bg-card border-border hover:border-primary/40 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 group">
+    <Card className={`h-full bg-card border-border hover:border-primary/40 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 group relative ${isSelected ? "ring-2 ring-primary border-primary" : ""}`}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between mb-2">
           <Badge
@@ -130,13 +131,89 @@ const PropertyCard = ({ property, index }: { property: Property; index: number }
             {property.verified && <BadgeCheck className="w-3.5 h-3.5 text-primary" />}
           </div>
         </div>
+
+        {/* Compare Button */}
+        <button
+          onClick={onToggleCompare}
+          className={`w-full mt-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-semibold transition-all ${
+            isSelected
+              ? "bg-primary text-primary-foreground"
+              : "bg-muted text-muted-foreground hover:bg-primary/10 hover:text-primary border border-border"
+          }`}
+        >
+          {isSelected ? <Check className="w-3.5 h-3.5" /> : <GitCompareArrows className="w-3.5 h-3.5" />}
+          {isSelected ? "Added to Compare" : "Compare"}
+        </button>
       </CardContent>
     </Card>
   </motion.div>
 );
 
+const ComparePanel = ({ properties, onRemove, onClose }: { properties: Property[]; onRemove: (index: number) => void; onClose: () => void }) => (
+  <motion.div
+    initial={{ y: 100, opacity: 0 }}
+    animate={{ y: 0, opacity: 1 }}
+    exit={{ y: 100, opacity: 0 }}
+    className="fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border shadow-2xl"
+  >
+    <div className="container py-4">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <GitCompareArrows className="w-5 h-5 text-primary" />
+          <span className="font-bold text-foreground">Compare Properties ({properties.length})</span>
+        </div>
+        <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
+          <X className="w-5 h-5" />
+        </button>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="text-left text-muted-foreground border-b border-border">
+              <th className="pb-2 pr-4 font-medium">Property</th>
+              <th className="pb-2 pr-4 font-medium">Source</th>
+              <th className="pb-2 pr-4 font-medium">Rent</th>
+              <th className="pb-2 pr-4 font-medium">BHK</th>
+              <th className="pb-2 pr-4 font-medium">Sq Ft</th>
+              <th className="pb-2 pr-4 font-medium">Commute</th>
+              <th className="pb-2 pr-4 font-medium">Safety</th>
+              <th className="pb-2 pr-4 font-medium">Match</th>
+              <th className="pb-2 font-medium"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {properties.map((p, i) => (
+              <tr key={i} className="border-b border-border/50 last:border-0">
+                <td className="py-2 pr-4 font-semibold text-foreground">{p.title}</td>
+                <td className="py-2 pr-4">
+                  <Badge variant="outline" className={`text-xs ${p.source === "ChatGPT" ? "border-emerald-500/50 text-emerald-400" : "border-blue-500/50 text-blue-400"}`}>
+                    {p.source}
+                  </Badge>
+                </td>
+                <td className="py-2 pr-4 font-bold text-foreground">{p.rent}</td>
+                <td className="py-2 pr-4 text-muted-foreground">{p.bhk}</td>
+                <td className="py-2 pr-4 text-muted-foreground">{p.sqft}</td>
+                <td className="py-2 pr-4 text-muted-foreground">{p.commute}</td>
+                <td className={`py-2 pr-4 font-semibold ${safetyColor(p.safety)}`}>{p.safety}</td>
+                <td className="py-2 pr-4 font-bold text-primary">{p.matchScore}</td>
+                <td className="py-2">
+                  <button onClick={() => onRemove(i)} className="text-muted-foreground hover:text-destructive">
+                    <X className="w-4 h-4" />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </motion.div>
+);
+
 const PropertyListingsSection = () => {
   const [activeTab, setActiveTab] = useState<"all" | "chatgpt" | "perplexity">("all");
+  const [compareList, setCompareList] = useState<Property[]>([]);
+  const [showCompare, setShowCompare] = useState(false);
 
   const displayProperties =
     activeTab === "chatgpt"
@@ -144,6 +221,20 @@ const PropertyListingsSection = () => {
       : activeTab === "perplexity"
       ? perplexityProperties
       : [...chatGPTProperties, ...perplexityProperties];
+
+  const toggleCompare = (property: Property) => {
+    setCompareList((prev) => {
+      const exists = prev.find((p) => p.title === property.title && p.source === property.source);
+      if (exists) return prev.filter((p) => !(p.title === property.title && p.source === property.source));
+      if (prev.length >= 4) return prev;
+      const updated = [...prev, property];
+      if (updated.length >= 2) setShowCompare(true);
+      return updated;
+    });
+  };
+
+  const isSelected = (property: Property) =>
+    compareList.some((p) => p.title === property.title && p.source === property.source);
 
   return (
     <section id="listings" className="py-20 bg-muted/30">
@@ -163,7 +254,7 @@ const PropertyListingsSection = () => {
         </motion.div>
 
         {/* Filter tabs */}
-        <div className="flex justify-center gap-2 mb-10">
+        <div className="flex flex-wrap justify-center gap-2 mb-10">
           {[
             { key: "all" as const, label: "All (20)" },
             { key: "chatgpt" as const, label: "🤖 ChatGPT (10)" },
@@ -181,14 +272,40 @@ const PropertyListingsSection = () => {
               {tab.label}
             </button>
           ))}
+          {compareList.length > 0 && (
+            <Button
+              size="sm"
+              onClick={() => setShowCompare(!showCompare)}
+              className="rounded-full gap-1.5"
+            >
+              <GitCompareArrows className="w-4 h-4" />
+              Compare ({compareList.length})
+            </Button>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {displayProperties.map((property, index) => (
-            <PropertyCard key={`${property.source}-${property.title}-${index}`} property={property} index={index} />
+            <PropertyCard
+              key={`${property.source}-${property.title}-${index}`}
+              property={property}
+              index={index}
+              isSelected={isSelected(property)}
+              onToggleCompare={() => toggleCompare(property)}
+            />
           ))}
         </div>
       </div>
+
+      <AnimatePresence>
+        {showCompare && compareList.length > 0 && (
+          <ComparePanel
+            properties={compareList}
+            onRemove={(i) => setCompareList((prev) => prev.filter((_, idx) => idx !== i))}
+            onClose={() => setShowCompare(false)}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 };
