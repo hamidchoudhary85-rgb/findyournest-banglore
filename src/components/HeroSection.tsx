@@ -49,7 +49,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-[1.1] tracking-tight text-primary-foreground mb-6"
+            className="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-[1.1] tracking-tight text-primary-foreground mb-6 px-4"
           >
             Find Your Perfect
             <span className="text-gradient-primary block">Home in Bangalore</span>
