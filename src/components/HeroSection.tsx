@@ -59,10 +59,10 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-lg md:text-xl text-primary-foreground/70 max-w-xl mx-auto mb-8 leading-relaxed"
+            className="text-lg md:text-xl lg:text-2xl text-primary-foreground/70 mb-8 leading-relaxed px-4 sm:px-8 lg:px-16 max-w-5xl mx-auto"
           >
-            The AI matchmaker for working professionals earning ₹30K–₹50K. 
-            We rank homes by budget fit, commute, safety & your real needs — not random listings.
+            The AI matchmaker for working professionals earning ₹30K–₹50K.
+            <span className="block mt-2">We rank homes by budget fit, commute, safety & your real needs — not random listings.</span>
           </motion.p>
 
           <motion.div
