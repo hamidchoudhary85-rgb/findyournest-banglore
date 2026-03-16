@@ -12,8 +12,8 @@ const HeroSection = () => {
         <div className="absolute inset-0 hero-gradient opacity-85" />
       </div>
 
-      <div className="w-full relative z-10 py-20 px-4 flex flex-col items-center text-center">
-        <div className="w-full max-w-4xl">
+      <div className="w-full relative z-10 py-20 px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
+        <div className="w-full">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
