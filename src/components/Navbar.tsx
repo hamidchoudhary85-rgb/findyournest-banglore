@@ -79,7 +79,7 @@ const Navbar = () => {
               {link.label}
             </a>
           ))}
-          <Button className="w-full rounded-lg font-semibold">Get Started</Button>
+          <ContactUsDialog />
         </motion.div>
       )}
     </motion.nav>
