@@ -50,7 +50,7 @@ const Navbar = () => {
               {link.label}
             </a>
           ))}
-          <Button size="sm" className="rounded-lg font-semibold">Get Started</Button>
+          <ContactUsDialog variant="nav" />
         </div>
 
         {/* Mobile toggle */}
