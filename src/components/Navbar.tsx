@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import logo from "@/assets/nearnest-logo.png";
-import ContactUsDialog from "@/components/ContactUsDialog";
+import { ContactUsModal } from "./ContactUsModal";
+import { FeedbackModal } from "./FeedbackModal";
+import { ScoreTableModal } from "./ScoreTableModal";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -50,7 +52,11 @@ const Navbar = () => {
               {link.label}
             </a>
           ))}
-          <ContactUsDialog variant="nav" />
+          <div className="flex items-center gap-3">
+            <ContactUsModal className="rounded-lg font-semibold h-9 px-3 text-sm" />
+            <FeedbackModal className="rounded-lg font-semibold h-9 px-3 text-sm" variant="outline" />
+            <ScoreTableModal className="rounded-lg font-semibold h-9 px-3 text-sm" variant="secondary" />
+          </div>
         </div>
 
         {/* Mobile toggle */}
@@ -79,7 +85,9 @@ const Navbar = () => {
               {link.label}
             </a>
           ))}
-          <ContactUsDialog />
+          <ContactUsModal className="w-full rounded-lg font-semibold h-10 px-4 py-2" />
+          <FeedbackModal className="w-full rounded-lg font-semibold h-10 px-4 py-2" variant="outline" />
+          <ScoreTableModal className="w-full rounded-lg font-semibold h-10 px-4 py-2" variant="secondary" />
         </motion.div>
       )}
     </motion.nav>
