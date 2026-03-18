@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import logo from "@/assets/nearnest-logo.png";
+import ContactUsDialog from "@/components/ContactUsDialog";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
