@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import logo from "@/assets/nearnest-logo.png";
+import ContactUsDialog from "@/components/ContactUsDialog";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -50,7 +50,7 @@ const Navbar = () => {
               {link.label}
             </a>
           ))}
-          <Button size="sm" className="rounded-lg font-semibold">Get Started</Button>
+          <ContactUsDialog variant="nav" />
         </div>
 
         {/* Mobile toggle */}
@@ -79,7 +79,7 @@ const Navbar = () => {
               {link.label}
             </a>
           ))}
-          <Button className="w-full rounded-lg font-semibold">Get Started</Button>
+          <ContactUsDialog />
         </motion.div>
       )}
     </motion.nav>
