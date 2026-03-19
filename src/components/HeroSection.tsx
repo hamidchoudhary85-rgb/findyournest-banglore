@@ -1,10 +1,15 @@
 import { motion } from "framer-motion";
-import { MapPin, Shield, Clock, IndianRupee, Brain, TrendingUp } from "lucide-react";
+import { MapPin, Shield, Clock, IndianRupee, Brain } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ContactUsModal } from "./ContactUsModal";
+import { AddPropertyModal } from "./AddPropertyModal";
+import { AddAmenitiesModal } from "./AddAmenitiesModal";
+import { AddDistanceTableModal } from "./AddDistanceTableModal";
+import { FeedbackModal } from "./FeedbackModal";
+import { ScoreTableModal } from "./ScoreTableModal";
 import heroImg from "@/assets/bangalore-hero.jpg";
 
-const HeroSection = () => {
-  return (
+const HeroSection = () => (
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
       {/* Background image with overlay */}
       <div className="absolute inset-0">
@@ -12,37 +17,28 @@ const HeroSection = () => {
         <div className="absolute inset-0 hero-gradient opacity-85" />
       </div>
 
-      <div className="w-full relative z-10 py-20 px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
-        <div className="w-full">
+      {/* Floating action buttons (Desktop only) - relocated to naturally scroll with the page */}
+      <div className="hidden md:flex flex-col items-end gap-2 absolute top-24 right-4 z-20">
+        <ContactUsModal className="rounded-lg font-semibold h-9 px-4 text-sm shadow-md bg-card/90 hover:bg-card text-foreground border border-border transition-colors w-48" />
+        <AddPropertyModal className="rounded-lg font-semibold h-9 px-4 text-sm shadow-md bg-card/90 hover:bg-card text-foreground border border-border transition-colors w-48" />
+        <AddAmenitiesModal className="rounded-lg font-semibold h-9 px-4 text-sm shadow-md bg-card/90 hover:bg-card text-foreground border border-border transition-colors w-48" />
+        <AddDistanceTableModal className="rounded-lg font-semibold h-9 px-4 text-sm shadow-md bg-card/90 hover:bg-card text-foreground border border-border transition-colors w-48" />
+        <ScoreTableModal className="rounded-lg font-semibold h-9 px-4 text-sm shadow-md bg-card/90 hover:bg-card text-foreground border border-border transition-colors w-48" variant="secondary" />
+        <FeedbackModal className="rounded-lg font-semibold h-9 px-4 text-sm shadow-md bg-card/90 hover:bg-card text-foreground border border-border transition-colors w-48" variant="outline" />
+      </div>
+
+      <div className="w-full relative z-10 py-20 px-4 sm:px-12 lg:px-24 flex flex-col items-start text-left">
+        <div className="w-full max-w-4xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="flex items-center justify-center gap-2 mb-6"
+            className="flex items-center justify-start gap-2 mb-6"
           >
             <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-primary/20 text-primary text-sm font-medium border border-primary/30">
               <Brain className="w-4 h-4" />
               AI-Powered Rental Intelligence
             </span>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.05 }}
-            className="mb-8 flex justify-center"
-          >
-            <div className="relative w-full max-w-xl">
-              <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Search by area, landmark or office location..."
-                className="w-full h-12 pl-12 pr-28 rounded-xl bg-card/95 backdrop-blur-sm border border-border text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary shadow-lg"
-              />
-              <button className="absolute right-2 top-1/2 -translate-y-1/2 h-8 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors">
-                Search
-              </button>
-            </div>
           </motion.div>
 
           <motion.h1
@@ -59,7 +55,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-lg md:text-xl lg:text-2xl text-primary-foreground/70 mb-8 leading-relaxed px-4 sm:px-8 lg:px-16 max-w-5xl mx-auto"
+            className="text-lg md:text-xl lg:text-2xl text-primary-foreground/70 mb-8 leading-relaxed w-full max-w-2xl mr-auto"
           >
             The AI matchmaker for working professionals earning ₹30K–₹50K.
             <span className="block mt-2">We rank homes by budget fit, commute, safety & your real needs — not random listings.</span>
@@ -69,7 +65,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="flex flex-col sm:flex-row justify-center gap-4"
+            className="flex flex-col sm:flex-row justify-start gap-4"
           >
             <Button size="lg" className="text-lg px-8 py-6 rounded-xl font-semibold animate-pulse-glow">
               Find My Home
@@ -87,7 +83,7 @@ const HeroSection = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="flex flex-wrap justify-center gap-6 mt-12"
+            className="flex flex-wrap justify-start gap-6 mt-12"
           >
             {[
               { icon: IndianRupee, label: "₹5K – ₹25K Rent" },
@@ -104,7 +100,6 @@ const HeroSection = () => {
         </div>
       </div>
     </section>
-  );
-};
+);
 
 export default HeroSection;

@@ -1,8 +1,9 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Clock, Train, Shield, Home, IndianRupee, User, BadgeCheck, GitCompareArrows, X, Check } from "lucide-react";
+import { MapPin, Clock, Train, Shield, Home, IndianRupee, User, BadgeCheck, GitCompareArrows, X, Check, Search } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useState } from "react";
 
 interface Property {
@@ -210,17 +211,68 @@ const ComparePanel = ({ properties, onRemove, onClose }: { properties: Property[
   </motion.div>
 );
 
-const PropertyListingsSection = () => {
+interface Props {
+  searchQuery?: string;
+  setSearchQuery?: (q: string) => void;
+}
+
+const PropertyListingsSection = ({ searchQuery = "", setSearchQuery }: Props) => {
   const [activeTab, setActiveTab] = useState<"all" | "chatgpt" | "perplexity">("all");
   const [compareList, setCompareList] = useState<Property[]>([]);
   const [showCompare, setShowCompare] = useState(false);
 
-  const displayProperties =
+  const displayProperties = (
     activeTab === "chatgpt"
       ? chatGPTProperties
       : activeTab === "perplexity"
       ? perplexityProperties
-      : [...chatGPTProperties, ...perplexityProperties];
+      : [...chatGPTProperties, ...perplexityProperties]
+  ).filter((p) => {
+    if (!searchQuery.trim()) return true;
+    const lowerQuery = searchQuery.toLowerCase();
+    
+    const rentVal = parseInt(p.rent.replace(/\D/g, "") || "0", 10);
+    let cleanedQuery = lowerQuery
+      .replace(/budget/g, "")
+      .replace(/price/g, "")
+      .replace(/rent/g, "")
+      .replace(/between/g, "")
+      .replace(/rupees/g, "")
+      .replace(/rs/g, "")
+      .replace(/₹/g, "");
+
+    let isRangeMatch = true;
+    let isBudgetMatch = true;
+
+    // Match patterns like "5000 to 15000" or "5000-15000"
+    const rangeMatch = cleanedQuery.match(/(\d+)\s*(?:to|-)\s*(\d+)/);
+    if (rangeMatch) {
+      const min = parseInt(rangeMatch[1], 10);
+      const max = parseInt(rangeMatch[2], 10);
+      isRangeMatch = rentVal >= min && rentVal <= max;
+      cleanedQuery = cleanedQuery.replace(rangeMatch[0], "").trim();
+    } 
+    // Match single numbers (budget max) like "15000"
+    else {
+      // Find standalone number > 1000
+      const singleNumMatch = cleanedQuery.match(/\b(\d{4,})\b/);
+      if (singleNumMatch) {
+        const target = parseInt(singleNumMatch[1], 10);
+        isBudgetMatch = rentVal <= target;
+        cleanedQuery = cleanedQuery.replace(singleNumMatch[0], "").trim();
+      }
+    }
+
+    if (!isRangeMatch || !isBudgetMatch) return false;
+    if (!cleanedQuery.trim()) return true;
+
+    // Combine all property values into a single searchable string
+    const searchableText = Object.values(p).map(val => 
+      typeof val === 'string' ? val.replace(/,/g, '') : val
+    ).join(" ").toLowerCase();
+
+    return searchableText.includes(cleanedQuery.replace(/,/g, '').trim());
+  });
 
   const toggleCompare = (property: Property) => {
     setCompareList((prev) => {
@@ -253,6 +305,17 @@ const PropertyListingsSection = () => {
           </p>
         </motion.div>
 
+        {/* Search Bar */}
+        <div className="relative w-full max-w-md mx-auto mb-8">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+          <Input
+            placeholder="Search categories (e.g. 1BHK, 2BHK) or location..."
+            className="pl-9 w-full rounded-full border-primary/20 focus-visible:ring-primary shadow-sm"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery?.(e.target.value)}
+          />
+        </div>
+
         {/* Filter tabs */}
         <div className="flex flex-wrap justify-center gap-2 mb-10">
           {[
@@ -283,6 +346,12 @@ const PropertyListingsSection = () => {
             </Button>
           )}
         </div>
+
+        {displayProperties.length === 0 && (
+          <div className="text-center py-10 text-muted-foreground">
+            No properties found for "{searchQuery}". Try searching for something else like "1BHK" or "Kengeri".
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {displayProperties.map((property, index) => (

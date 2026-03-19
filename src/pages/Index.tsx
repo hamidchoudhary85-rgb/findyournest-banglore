@@ -7,19 +7,25 @@ import AffordabilitySection from "@/components/AffordabilitySection";
 import PropertyListingsSection from "@/components/PropertyListingsSection";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
+import { GeminiChatbot } from "@/components/GeminiChatbot";
+
+import { useState } from "react";
 
 const Index = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       <HeroSection />
       <FeaturesSection />
-      <PropertyListingsSection />
+      <PropertyListingsSection searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       <HowItWorksSection />
       <AffordabilitySection />
       <CityFitSection />
       <CTASection />
       <Footer />
+      <GeminiChatbot />
     </div>
   );
 };

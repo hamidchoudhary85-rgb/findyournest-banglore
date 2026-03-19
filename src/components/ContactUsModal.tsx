@@ -8,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import {
   Select,
@@ -18,6 +19,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import emailjs from '@emailjs/browser';
 
 export function ContactUsModal({ className }: { className?: string }) {
   const { toast } = useToast();
@@ -70,6 +72,30 @@ export function ContactUsModal({ className }: { className?: string }) {
         console.warn("Supabase insert warning:", error);
       }
 
+      // Send welcome email to user
+      try {
+        const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID?.trim();
+        const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID?.trim();
+        const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY?.trim();
+
+        if (serviceId && templateId && publicKey && publicKey !== "YOUR_EMAILJS_PUBLIC_KEY") {
+          await emailjs.send(
+            serviceId,
+            templateId,
+            {
+              email: formData.email,
+              name: formData.name,
+            },
+            publicKey
+          );
+        } else {
+          console.warn("EmailJS credentials are not configured. Welcome email was not sent.");
+        }
+      } catch (emailError: any) {
+        console.error("Failed to send welcome email:", emailError?.text || emailError);
+        alert("EmailJS is rejecting the email with this exact error: " + (emailError?.text || JSON.stringify(emailError)));
+      }
+
       toast({
         title: "Success!",
         description: "Your details have been submitted. We will contact you soon.",
@@ -101,6 +127,9 @@ export function ContactUsModal({ className }: { className?: string }) {
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold font-display">Contact Us</DialogTitle>
+          <DialogDescription className="sr-only">
+            Please provide your details below to get in touch with NearNest.
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6 mt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
